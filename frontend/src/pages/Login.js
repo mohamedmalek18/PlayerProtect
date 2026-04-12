@@ -11,24 +11,19 @@ const Login = ({ onLogin }) => {
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // ── CLIENT-SIDE VALIDATION ──
   const validate = () => {
     const newErrors = {};
-
     if (isRegister) {
       if (!form.first_name) newErrors.first_name = "Prénom requis";
       if (!form.last_name) newErrors.last_name = "Nom requis";
-      if (!form.username || form.username.length < 3)
-        newErrors.username = "Min 3 caractères";
+      if (!form.username || form.username.length < 3) newErrors.username = "Min 3 caractères";
       if (!form.club) newErrors.club = "Club requis";
     }
-
     if (!form.email) {
       newErrors.email = "Email requis";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       newErrors.email = "Format invalide (ex: coach@club.com)";
     }
-
     if (!form.password) {
       newErrors.password = "Mot de passe requis";
     } else if (isRegister) {
@@ -36,9 +31,13 @@ const Login = ({ onLogin }) => {
       else if (!/[A-Z]/.test(form.password)) newErrors.password = "Au moins 1 majuscule";
       else if (!/[0-9]/.test(form.password)) newErrors.password = "Au moins 1 chiffre";
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (field, value) => {
+    setForm(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) setErrors(prev => ({ ...prev, [field]: "" }));
   };
 
   const handleSubmit = async () => {
@@ -64,22 +63,6 @@ const Login = ({ onLogin }) => {
     setTimeout(() => setMsg(""), 4000);
   };
 
-  const Field = ({ name, placeholder, type = "text" }) => (
-    <div style={styles.field}>
-      <input
-        style={{ ...styles.input, ...(errors[name] ? styles.inputError : {}) }}
-        placeholder={placeholder}
-        type={type}
-        value={form[name]}
-        onChange={(e) => {
-          setForm({ ...form, [name]: e.target.value });
-          if (errors[name]) setErrors({ ...errors, [name]: "" });
-        }}
-      />
-      {errors[name] && <span style={styles.errorText}>⚠️ {errors[name]}</span>}
-    </div>
-  );
-
   return (
     <div style={styles.page}>
       <div style={styles.card}>
@@ -103,19 +86,53 @@ const Login = ({ onLogin }) => {
           {isRegister && (
             <>
               <div style={styles.row}>
-                <Field name="first_name" placeholder="👤 Prénom" />
-                <Field name="last_name" placeholder="👤 Nom" />
+                <div style={styles.field}>
+                  <input style={{ ...styles.input, ...(errors.first_name ? styles.inputError : {}) }}
+                    placeholder="👤 Prénom" value={form.first_name}
+                    onChange={(e) => handleChange("first_name", e.target.value)} />
+                  {errors.first_name && <span style={styles.errorText}>⚠️ {errors.first_name}</span>}
+                </div>
+                <div style={styles.field}>
+                  <input style={{ ...styles.input, ...(errors.last_name ? styles.inputError : {}) }}
+                    placeholder="👤 Nom" value={form.last_name}
+                    onChange={(e) => handleChange("last_name", e.target.value)} />
+                  {errors.last_name && <span style={styles.errorText}>⚠️ {errors.last_name}</span>}
+                </div>
               </div>
-              <Field name="club" placeholder="🏟️ Club / Équipe" />
-              <Field name="username" placeholder="👤 Nom d'utilisateur" />
+
+              <div style={styles.field}>
+                <input style={{ ...styles.input, ...(errors.club ? styles.inputError : {}) }}
+                  placeholder="🏟️ Club / Équipe" value={form.club}
+                  onChange={(e) => handleChange("club", e.target.value)} />
+                {errors.club && <span style={styles.errorText}>⚠️ {errors.club}</span>}
+              </div>
+
+              <div style={styles.field}>
+                <input style={{ ...styles.input, ...(errors.username ? styles.inputError : {}) }}
+                  placeholder="👤 Nom d'utilisateur" value={form.username}
+                  onChange={(e) => handleChange("username", e.target.value)} />
+                {errors.username && <span style={styles.errorText}>⚠️ {errors.username}</span>}
+              </div>
             </>
           )}
-          <Field name="email" placeholder="📧 Email" type="email" />
-          <Field name="password" placeholder="🔒 Mot de passe" type="password" />
+
+          <div style={styles.field}>
+            <input style={{ ...styles.input, ...(errors.email ? styles.inputError : {}) }}
+              placeholder="📧 Email" type="email" value={form.email}
+              onChange={(e) => handleChange("email", e.target.value)} />
+            {errors.email && <span style={styles.errorText}>⚠️ {errors.email}</span>}
+          </div>
+
+          <div style={styles.field}>
+            <input style={{ ...styles.input, ...(errors.password ? styles.inputError : {}) }}
+              placeholder="🔒 Mot de passe" type="password" value={form.password}
+              onChange={(e) => handleChange("password", e.target.value)} />
+            {errors.password && <span style={styles.errorText}>⚠️ {errors.password}</span>}
+          </div>
 
           {isRegister && (
             <div style={styles.passwordHint}>
-              🔒 Le mot de passe doit contenir : min 8 caractères, 1 majuscule, 1 chiffre
+              🔒 Min 8 caractères, 1 majuscule, 1 chiffre
             </div>
           )}
 
