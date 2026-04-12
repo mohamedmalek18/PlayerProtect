@@ -7,6 +7,7 @@ import Matches from "./pages/Matches";
 import Performance from "./pages/Performance";
 import Risk from "./pages/Risk";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -16,15 +17,15 @@ function App() {
     if (savedUser) setUser(JSON.parse(savedUser));
   }, []);
 
-  const handleLogin = (userData) => {
-    setUser(userData);
-  };
+  const handleLogin = (userData) => setUser(userData);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
   };
+
+  const handleUpdate = (updatedUser) => setUser(updatedUser);
 
   if (!user) return <Login onLogin={handleLogin} />;
 
@@ -37,6 +38,7 @@ function App() {
         <Route path="/matches" element={<Matches />} />
         <Route path="/performance" element={<Performance />} />
         <Route path="/risk" element={<Risk />} />
+        <Route path="/profile" element={<Profile user={user} onUpdate={handleUpdate} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
