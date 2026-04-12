@@ -6,8 +6,9 @@ exports.getAll = (req, res) => {
     FROM performance p
     JOIN players pl ON p.player_id = pl.id
     JOIN matches m ON p.match_id = m.id
+    WHERE pl.coach_id = ?
   `;
-  db.query(sql, (err, results) => {
+  db.query(sql, [req.user.id], (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
@@ -18,9 +19,10 @@ exports.getByPlayer = (req, res) => {
     SELECT p.*, m.opponent, m.match_date
     FROM performance p
     JOIN matches m ON p.match_id = m.id
-    WHERE p.player_id = ?
+    JOIN players pl ON p.player_id = pl.id
+    WHERE p.player_id = ? AND pl.coach_id = ?
   `;
-  db.query(sql, [req.params.player_id], (err, results) => {
+  db.query(sql, [req.params.player_id, req.user.id], (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });

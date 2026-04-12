@@ -5,8 +5,9 @@ exports.getAll = (req, res) => {
     SELECT ih.*, p.name AS player_name
     FROM injury_history ih
     JOIN players p ON ih.player_id = p.id
+    WHERE p.coach_id = ?
   `;
-  db.query(sql, (err, results) => {
+  db.query(sql, [req.user.id], (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
@@ -14,8 +15,8 @@ exports.getAll = (req, res) => {
 
 exports.getByPlayer = (req, res) => {
   db.query(
-    "SELECT * FROM injury_history WHERE player_id = ?",
-    [req.params.player_id],
+    "SELECT ih.* FROM injury_history ih JOIN players p ON ih.player_id = p.id WHERE ih.player_id = ? AND p.coach_id = ?",
+    [req.params.player_id, req.user.id],
     (err, results) => {
       if (err) return res.status(500).json({ error: err.message });
       res.json(results);
