@@ -6,6 +6,7 @@ import Players from "./pages/Players";
 import Matches from "./pages/Matches";
 import Performance from "./pages/Performance";
 import Risk from "./pages/Risk";
+import Injuries from "./pages/Injuries";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 
@@ -18,13 +19,11 @@ function App() {
   }, []);
 
   const handleLogin = (userData) => setUser(userData);
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
   };
-
   const handleUpdate = (updatedUser) => setUser(updatedUser);
 
   if (!user) return <Login onLogin={handleLogin} />;
@@ -37,6 +36,7 @@ function App() {
         <Route path="/players" element={<Players />} />
         <Route path="/matches" element={<Matches />} />
         <Route path="/performance" element={<Performance />} />
+        <Route path="/injuries" element={<Injuries />} />
         <Route path="/risk" element={<Risk />} />
         <Route path="/profile" element={<Profile user={user} onUpdate={handleUpdate} />} />
         <Route path="*" element={<Navigate to="/" />} />

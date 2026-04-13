@@ -7,6 +7,7 @@ const Navbar = ({ user, onLogout }) => {
     { path: "/players", label: "👤 Joueurs" },
     { path: "/matches", label: "⚽ Matchs" },
     { path: "/performance", label: "📊 Performance" },
+    { path: "/injuries", label: "🤕 Blessures" },
     { path: "/risk", label: "⚠️ Risque" },
   ];
 
@@ -15,7 +16,8 @@ const Navbar = ({ user, onLogout }) => {
       <div style={styles.logo}>⚽ PlayerProtect</div>
       <div style={styles.links}>
         {links.map((l) => (
-          <Link key={l.path} to={l.path} style={{ ...styles.link, ...(location.pathname === l.path ? styles.active : {}) }}>
+          <Link key={l.path} to={l.path}
+            style={{ ...styles.link, ...(location.pathname === l.path ? styles.active : {}) }}>
             {l.label}
           </Link>
         ))}
@@ -38,8 +40,8 @@ const Navbar = ({ user, onLogout }) => {
 const styles = {
   nav: { background: "linear-gradient(135deg, #1a1a2e, #16213e)", padding: "12px 30px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0 2px 10px rgba(0,0,0,0.3)" },
   logo: { color: "#00d4ff", fontSize: "20px", fontWeight: "bold" },
-  links: { display: "flex", gap: "8px" },
-  link: { color: "#ccc", textDecoration: "none", padding: "8px 14px", borderRadius: "8px", fontSize: "13px" },
+  links: { display: "flex", gap: "5px" },
+  link: { color: "#ccc", textDecoration: "none", padding: "7px 12px", borderRadius: "8px", fontSize: "13px" },
   active: { background: "#00d4ff", color: "#000", fontWeight: "bold" },
   userSection: { display: "flex", alignItems: "center", gap: "10px" },
   profileLink: { display: "flex", alignItems: "center", gap: "8px", textDecoration: "none" },
